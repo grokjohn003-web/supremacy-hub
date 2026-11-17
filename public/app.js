@@ -915,8 +915,10 @@
       });
     }).catch(() => setVer('offline mode unavailable'));
     let reloading = false;
+    // On a first visit the worker takes control without any update: no reload needed.
+    const hadController = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (reloading || !navigator.serviceWorker.controller) return;
+      if (reloading || !hadController) return;
       // Only reload automatically when nothing is running in the frame.
       if (cur && (cur.phase === 'loaded' || cur.phase === 'loading')) return;
       reloading = true;

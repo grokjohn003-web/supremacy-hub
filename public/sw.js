@@ -1,6 +1,6 @@
 /* Supremacy Hub service worker: keeps the app usable on poor or no connection. */
 'use strict';
-const VERSION = 'sh-v1.0.0';
+const VERSION = 'sh-v1.0.1';
 const SHELL_CACHE = `${VERSION}-shell`;
 const CHECK_CACHE = 'sh-checks';
 const SHELL = ['/', '/index.html', '/app.css', '/app.js', '/icon.svg', '/manifest.webmanifest'];
