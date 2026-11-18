@@ -219,7 +219,7 @@
       if (e.name === 'AbortError') throw e;
       const old = checks[key];
       if (old) return { ...old, cached: true, stale: true };
-      let reason = 'The hub server couldn’t be reached to check this site.';
+      let reason = 'The server couldn’t be reached to check this site.';
       if (e.status === 502 || e.status === 504) reason = e.message;
       else if (e.status === 400 || e.status === 403) { const err = new Error(e.message); err.hard = true; throw err; }
       else if (e.timeout) reason = 'The embed check timed out on this connection.';
@@ -327,9 +327,9 @@
   function renderBlocked(v) {
     setOverlay(panel({
       iconName: 'alert', tone: 'warn',
-      title: 'This site can’t be shown inside the hub',
+      title: 'This site can’t be shown inside StratFinder',
       host: cur.host,
-      text: 'The site tells browsers not to display it inside other pages. Open it in its own tab instead — the hub keeps track of it here.',
+      text: 'The site tells browsers not to display it inside other pages. Open it in its own tab instead — StratFinder keeps track of it here.',
       detail: v.reason,
       actions: [btn('Open in new tab', () => popout(), 'primary', 'popout'), btn('Try embedding anyway', () => load(cur.url, { forceFrame: true }), 'ghost'), btn('Back to home', () => showView('home'), 'ghost')],
     }));
@@ -351,7 +351,7 @@
       iconName: 'alert', tone: 'warn',
       title: 'The new tab was blocked',
       host: new URL(url).host,
-      text: 'Your browser stopped the hub from opening a tab. Use the link below, or allow pop-ups for this site in the address bar.',
+      text: 'Your browser stopped StratFinder from opening a tab. Use the link below, or allow pop-ups for this site in the address bar.',
       actions: [
         h('a', { class: 'btn primary', href: url, target: '_blank', rel: 'noopener noreferrer' }, icon('popout'), 'Open in new tab'),
         btn('Embed here instead', () => load(url, { forceFrame: true }), 'ghost'),
@@ -514,7 +514,7 @@
     f.allow = 'fullscreen; autoplay; clipboard-write; gamepad; screen-wake-lock';
     f.allowFullscreen = true;
     f.referrerPolicy = 'strict-origin-when-cross-origin';
-    // No allow-top-navigation: embedded pages can't hijack the hub.
+    // No allow-top-navigation: embedded pages can't hijack StratFinder.
     f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-pointer-lock allow-modals allow-downloads allow-storage-access-by-user-activation');
     f.addEventListener('load', () => {
       if (!cur || cur.seq !== seq || cur.frameLoaded) return;
@@ -688,7 +688,7 @@
     if (!navigator.onLine) {
       p.classList.add('offline'); text = 'Offline'; title = 'No connection. Pages will load when you reconnect.';
     } else if (net.backend === 'down') {
-      p.classList.add('degraded'); text = 'Limited'; title = 'Hub server unreachable — embed checks are unavailable, saved results are used.';
+      p.classList.add('degraded'); text = 'Limited'; title = 'Server unreachable — embed checks are unavailable, saved results are used.';
     } else if (slowLink()) {
       p.classList.add('slow'); text = net.rtt ? `Slow · ${net.rtt} ms` : 'Slow'; title = 'Slow connection — timeouts are extended automatically.';
     } else if (net.backend === 'up') {
@@ -708,10 +708,10 @@
       await fetchJSON(`/api/health?t=${Date.now()}`, { timeout: 6000, retries: 0 });
       net.backend = 'up';
       net.rtt = Math.round(performance.now() - t0);
-      if (announce) toast(`Hub server reachable · ${net.rtt} ms`, 'ok');
+      if (announce) toast(`Server reachable · ${net.rtt} ms`, 'ok');
     } catch {
       net.backend = navigator.onLine ? 'down' : net.backend;
-      if (announce) toast(navigator.onLine ? 'Hub server didn’t respond. Sites can still open; embed checks use saved results.' : 'You’re offline.', 'warn');
+      if (announce) toast(navigator.onLine ? 'Server didn’t respond. Sites can still open; embed checks use saved results.' : 'You’re offline.', 'warn');
     } finally {
       pinging = false;
       renderNet();
