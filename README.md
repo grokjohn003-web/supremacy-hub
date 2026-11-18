@@ -1,6 +1,6 @@
-# Supremacy Hub
+# StratFinder
 
-A lightweight, dark-themed browser hub for launching and playing web strategy games: Supremacy 1914, Supremacy: World War 3 (formerly Conflict of Nations), Call of War 1942 and any other web game site you add.
+A lightweight, dark-themed personal start page and browser for a short list of bookmarked sites, plus any site you add.
 
 No build step, no dependencies. The whole client is about 20 KB compressed.
 

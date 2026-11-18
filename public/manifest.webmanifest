@@ -1,7 +1,7 @@
 {
-  "name": "Supremacy Hub",
-  "short_name": "Supremacy Hub",
-  "description": "Launch and play Supremacy 1914, Supremacy: World War 3 and other web strategy games.",
+  "name": "StratFinder",
+  "short_name": "StratFinder",
+  "description": "StratFinder: a lightweight personal start page and web browser for bookmarked sites.",
   "start_url": "/#home",
   "scope": "/",
   "display": "standalone",

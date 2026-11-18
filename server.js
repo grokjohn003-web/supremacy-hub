@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * Supremacy Hub server: no dependencies, Node 18+.
+ * StratFinder server: no dependencies, Node 18+.
  *  - Serves /public with brotli/gzip, ETags and 304s (small transfers on slow links)
  *  - GET /api/check?url=...  → can this site be embedded in a frame?
  *  - GET /api/health         → liveness, used by the client's connection indicator
@@ -14,7 +14,7 @@ const crypto = require('crypto');
 const { handleCheck } = require('./lib/frame-check');
 
 if (typeof fetch !== 'function') {
-  console.error('Supremacy Hub needs Node.js 18 or newer (global fetch).');
+  console.error('StratFinder needs Node.js 18 or newer (global fetch).');
   process.exit(1);
 }
 
@@ -189,5 +189,5 @@ const server = http.createServer(async (req, res) => {
 
 server.keepAliveTimeout = 65_000;
 server.listen(PORT, HOST, () => {
-  console.log(`Supremacy Hub running at http://localhost:${PORT}`);
+  console.log(`StratFinder running at http://localhost:${PORT}`);
 });

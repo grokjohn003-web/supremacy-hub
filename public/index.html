@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Supremacy Hub</title>
-  <meta name="description" content="Launch and play Supremacy 1914, Supremacy: World War 3 and other web strategy games.">
+  <title>StratFinder</title>
+  <meta name="description" content="StratFinder: a lightweight personal start page and web browser for bookmarked sites.">
   <meta name="theme-color" content="#0b1220">
   <meta name="color-scheme" content="dark">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -27,16 +27,16 @@
       <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
       <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
       <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2zM12 10v5M12 18v.01"/></symbol>
-      <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></symbol>
+      <symbol id="i-open" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></symbol>
       <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
     </defs>
   </svg>
 
   <div class="app">
     <header class="topbar">
-      <a class="brand" href="#home" data-nav="home" aria-label="Supremacy Hub home">
+      <a class="brand" href="#home" data-nav="home" aria-label="StratFinder home">
         <img src="/icon.svg" width="26" height="26" alt="">
-        <span>Supremacy Hub</span>
+        <span>StratFinder</span>
       </a>
 
       <form class="urlbar" id="urlForm" autocomplete="off" novalidate>
@@ -49,7 +49,7 @@
         <label class="url-field">
           <svg class="url-icon" aria-hidden="true"><use href="#i-lock"/></svg>
           <input id="urlInput" type="text" inputmode="url" spellcheck="false" autocapitalize="off"
-                 placeholder="Enter a supported address — e.g. supremacy1914.com" aria-label="Address"
+                 placeholder="Enter a supported address — e.g. example.com" aria-label="Address"
                  list="urlSuggestions" enterkeyhint="go">
           <datalist id="urlSuggestions"></datalist>
         </label>
@@ -66,28 +66,28 @@
     </header>
 
     <nav class="rail" aria-label="Sections">
-      <button type="button" class="rail-btn" data-nav="home" aria-current="page"><svg><use href="#i-grid"/></svg><span>Games</span></button>
+      <button type="button" class="rail-btn" data-nav="home" aria-current="page"><svg><use href="#i-grid"/></svg><span>Home</span></button>
       <button type="button" class="rail-btn" data-nav="browser"><svg><use href="#i-globe"/></svg><span>Browser</span></button>
       <button type="button" class="rail-btn" data-nav="sites"><svg><use href="#i-sliders"/></svg><span>Sites</span></button>
     </nav>
 
     <main class="main">
-      <!-- Games -->
+      <!-- Home -->
       <section class="view" id="view-home" aria-labelledby="h-home">
         <div class="view-inner">
           <div class="section-head">
             <div>
-              <p class="eyebrow">Supremacy Franchise</p>
-              <h1 id="h-home">Supremacy 1914 &amp; World War 3</h1>
-              <p class="muted">Real-time grand strategy in your browser. Matches run for days or weeks, so you can leave and come back.</p>
+              <p class="eyebrow">Start page</p>
+              <h1 id="h-home">StratFinder</h1>
+              <p class="muted">Your bookmarked sites in one place, built to work on slow connections.</p>
             </div>
           </div>
-          <div class="card-grid featured" id="featuredGames"></div>
+          <div class="card-grid featured" id="featuredTiles"></div>
 
           <div class="section-head small">
-            <h2>More web games</h2>
+            <h2>More sites</h2>
           </div>
-          <div class="card-grid" id="moreGames"></div>
+          <div class="card-grid" id="moreTiles"></div>
 
           <div class="section-head small" id="recentHead" hidden>
             <h2>Recently opened</h2>
@@ -117,11 +117,11 @@
           <div class="section-head">
             <div>
               <h1 id="h-sites">Supported sites</h1>
-              <p class="muted">The address bar opens these domains and their subdomains only. Add another web game site if you need it.</p>
+              <p class="muted">The address bar opens these domains and their subdomains only. Add another site if you need it.</p>
             </div>
           </div>
           <form class="add-site" id="addSiteForm" autocomplete="off" novalidate>
-            <input id="addSiteInput" type="text" inputmode="url" spellcheck="false" autocapitalize="off" placeholder="e.g. example-game.com" aria-label="Domain to add">
+            <input id="addSiteInput" type="text" inputmode="url" spellcheck="false" autocapitalize="off" placeholder="e.g. example.com" aria-label="Domain to add">
             <button type="submit" class="btn primary">Add site</button>
           </form>
           <ul class="site-list" id="siteList"></ul>
@@ -129,7 +129,7 @@
           <h2 class="settings-title">Settings</h2>
           <div class="settings">
             <label class="setting">
-              <span><strong>Always open games in a separate tab</strong><small>Skips embedding. Best when sign-in doesn't stay in the frame.</small></span>
+              <span><strong>Always open sites in a separate tab</strong><small>Skips embedding. Best when sign-in doesn't stay in the frame.</small></span>
               <input type="checkbox" id="setPreferWindow" class="switch">
             </label>
             <label class="setting">
@@ -157,6 +157,6 @@
   </div>
 
   <div class="toasts" id="toasts" aria-live="assertive"></div>
-  <noscript><p class="noscript">Supremacy Hub needs JavaScript turned on.</p></noscript>
+  <noscript><p class="noscript">StratFinder needs JavaScript turned on.</p></noscript>
 </body>
 </html>

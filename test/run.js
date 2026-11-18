@@ -48,7 +48,7 @@ const target = new URL('https://www.game.com/');
     await t('GET / serves the app with security headers', async () => {
       const r = await fetch(`${base}/`);
       assert.strictEqual(r.status, 200);
-      assert.match(await r.text(), /Supremacy Hub/);
+      assert.match(await r.text(), /StratFinder/);
       assert.match(r.headers.get('content-security-policy'), /frame-ancestors 'none'/);
     });
     await t('static files are brotli compressed and support 304', async () => {
@@ -57,7 +57,7 @@ const target = new URL('https://www.game.com/');
       assert.strictEqual(res.headers['content-encoding'], 'br');
       const chunks = []; for await (const c of res) chunks.push(c);
       const body = zlib.brotliDecompressSync(Buffer.concat(chunks)).toString();
-      assert.match(body, /Supremacy Hub/);
+      assert.match(body, /StratFinder/);
       const r2 = await fetch(`${base}/app.js`, { headers: { 'if-none-match': res.headers.etag } });
       assert.strictEqual(r2.status, 304);
     });
@@ -67,7 +67,7 @@ const target = new URL('https://www.game.com/');
     });
     await t('unknown routes fall back to the app shell', async () => {
       const r = await fetch(`${base}/games/whatever`);
-      assert.match(await r.text(), /<title>Supremacy Hub/);
+      assert.match(await r.text(), /<title>StratFinder/);
     });
     await t('/api/health', async () => {
       const r = await fetch(`${base}/api/health`);

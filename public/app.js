@@ -1,33 +1,33 @@
-/* Supremacy Hub — client. No dependencies. */
+/* StratFinder — client. No dependencies. */
 'use strict';
 (() => {
-  const VERSION = '1.0.0';
+  const VERSION = '1.1.0';
   const CHECK_TTL = 12 * 60 * 60 * 1000;
   const MAX_RECENT = 12;
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
-  const GAMES = [
+  const BOOKMARKS = [
     {
       id: 's1914', name: 'Supremacy 1914', era: 'WWI', mono: '1914', featured: true,
-      blurb: 'The original real-time grand strategy game. Lead a nation through the Great War against up to 100 players.',
+      blurb: 'Bookmarked site.',
       url: 'https://www.supremacy1914.com/',
       art: 'linear-gradient(135deg,#40321c 0%,#232637 58%,#10172a 100%)',
     },
     {
       id: 'sww3', name: 'Supremacy: World War 3', era: 'Modern', mono: 'WW3', featured: true,
-      blurb: 'Modern warfare on a real-world map, with coalitions, air power and nuclear options. Formerly Conflict of Nations: World War 3.',
+      blurb: 'Bookmarked site.',
       url: 'https://www.conflictnations.com/',
       art: 'linear-gradient(135deg,#173c4d 0%,#16233d 55%,#0e1524 100%)',
     },
     {
       id: 'cow', name: 'Supremacy: Call of War 1942', era: 'WWII', mono: '1942',
-      blurb: 'Second World War strategy with research trees, resources and diplomacy.',
+      blurb: 'Bookmarked site.',
       url: 'https://www.callofwar.com/',
       art: 'linear-gradient(135deg,#3b3a24 0%,#1f2434 60%,#10172a 100%)',
     },
     {
       id: 'portal', name: 'Supremacy portal', era: 'Official', mono: 'S',
-      blurb: 'Franchise home: news, forums and links to every Supremacy title.',
+      blurb: 'News and forums.',
       url: 'https://www.playsupremacy.com/',
       art: 'linear-gradient(135deg,#26304a 0%,#171d2e 60%,#0e1524 100%)',
     },
@@ -186,14 +186,14 @@
     if (allDomains().includes(domain)) { toast(`${domain} is already supported.`); return domain; }
     customDomains.push({ domain, addedAt: Date.now() });
     store.set('domains', customDomains);
-    renderSites(); renderGames(); renderSuggestions();
+    renderSites(); renderTiles(); renderSuggestions();
     toast(`Added ${domain}`, 'ok');
     return domain;
   }
   function removeDomain(domain) {
     customDomains = customDomains.filter((d) => d.domain !== domain);
     store.set('domains', customDomains);
-    renderSites(); renderGames(); renderSuggestions();
+    renderSites(); renderTiles(); renderSuggestions();
     toast(`Removed ${domain}`, 'ok', { label: 'Undo', fn: () => addDomain(domain) });
   }
 
@@ -294,8 +294,8 @@
     setOverlay(h('div', { class: 'panel empty-state' },
       h('div', { class: 'icon-wrap' }, icon('globe')),
       h('h2', { text: 'Nothing open yet' }),
-      h('p', { text: 'Type a supported address above, or launch a game.' }),
-      h('div', { class: 'quick' }, GAMES.filter((g) => g.featured).map((g) => btn(g.name, () => launch(g.url), 'ghost sm', 'play')))));
+      h('p', { text: 'Type a supported address above, or open a bookmark.' }),
+      h('div', { class: 'quick' }, BOOKMARKS.filter((g) => g.featured).map((g) => btn(g.name, () => launch(g.url), 'ghost sm', 'open')))));
     updateChrome();
   }
 
@@ -331,7 +331,7 @@
       host: cur.host,
       text: 'The site tells browsers not to display it inside other pages. Open it in its own tab instead — the hub keeps track of it here.',
       detail: v.reason,
-      actions: [btn('Open in new tab', () => popout(), 'primary', 'popout'), btn('Try embedding anyway', () => load(cur.url, { forceFrame: true }), 'ghost'), btn('Back to games', () => showView('home'), 'ghost')],
+      actions: [btn('Open in new tab', () => popout(), 'primary', 'popout'), btn('Try embedding anyway', () => load(cur.url, { forceFrame: true }), 'ghost'), btn('Back to home', () => showView('home'), 'ghost')],
     }));
   }
 
@@ -340,7 +340,7 @@
       iconName: 'popout', tone: '',
       title: 'Ready to open in a new tab',
       host: cur.host,
-      text: settings.preferWindow ? 'Your settings open games in a separate tab.' : 'This site needs its own tab.',
+      text: settings.preferWindow ? 'Your settings open sites in a separate tab.' : 'This site needs its own tab.',
       detail: reason,
       actions: [btn('Open in new tab', () => popout(), 'primary', 'popout'), btn('Embed here instead', () => load(cur.url, { forceFrame: true }), 'ghost')],
     }));
@@ -364,9 +364,9 @@
     const open = rec && !rec.w.closed;
     setOverlay(panel({
       iconName: open ? 'popout' : 'globe', tone: open ? 'ok' : '',
-      title: open ? 'Playing in a separate tab' : 'The game tab was closed',
+      title: open ? 'Open in a separate tab' : 'The tab was closed',
       host: cur.host,
-      text: open ? 'The game keeps running in its own tab, so this hub stays free.' : 'Reopen it whenever you’re ready.',
+      text: open ? 'The page keeps running in its own tab, so StratFinder stays free.' : 'Reopen it whenever you’re ready.',
       actions: open
         ? [btn('Switch to tab', () => focusWindow(cur.host), 'primary'), btn('Close tab', () => { closeWindow(cur.host); }, 'ghost'), btn('Embed here instead', () => load(cur.url, { forceFrame: true }), 'ghost')]
         : [btn('Reopen', () => popout(), 'primary', 'popout'), btn('Embed here instead', () => load(cur.url, { forceFrame: true }), 'ghost')],
@@ -386,14 +386,14 @@
   function renderError(title, message) {
     setOverlay(panel({
       iconName: 'alert', tone: 'err', title, host: cur?.host, text: message,
-      actions: [btn('Retry', () => reload(), 'primary'), btn('Back to games', () => showView('home'), 'ghost')],
+      actions: [btn('Retry', () => reload(), 'primary'), btn('Back to home', () => showView('home'), 'ghost')],
     }));
   }
 
   function renderStopped() {
     setOverlay(panel({
       iconName: 'stop', title: 'Loading stopped', host: cur.host,
-      actions: [btn('Reload', () => reload(), 'primary', 'reload'), btn('Back to games', () => showView('home'), 'ghost')],
+      actions: [btn('Reload', () => reload(), 'primary', 'reload'), btn('Back to home', () => showView('home'), 'ghost')],
     }));
   }
 
@@ -606,7 +606,7 @@
       if (rec.url !== url) { try { rec.w.location.href = url; rec.url = url; } catch { /* keep existing page */ } }
     } else {
       // Open blank first so the new tab can be cut off from this page (no window.opener).
-      // '' never navigates an existing tab of the same name, so a running game is never reset.
+      // '' never navigates an existing tab of the same name, so a running page is never reset.
       const w = window.open('', winName(host));
       if (!w) return null;
       let fresh = false;
@@ -711,7 +711,7 @@
       if (announce) toast(`Hub server reachable · ${net.rtt} ms`, 'ok');
     } catch {
       net.backend = navigator.onLine ? 'down' : net.backend;
-      if (announce) toast(navigator.onLine ? 'Hub server didn’t respond. Games can still open; embed checks use saved results.' : 'You’re offline.', 'warn');
+      if (announce) toast(navigator.onLine ? 'Hub server didn’t respond. Sites can still open; embed checks use saved results.' : 'You’re offline.', 'warn');
     } finally {
       pinging = false;
       renderNet();
@@ -731,18 +731,18 @@
       pendingOnline = () => load(url, { forceFrame: forced });
       showNotice('Connection lost while loading. The page will reload automatically when you’re back online.');
     } else if (cur && cur.phase === 'loaded') {
-      showNotice('Connection lost. The game will reconnect by itself once you’re back online.');
+      showNotice('Connection lost. The page will reconnect by itself once you’re back online.');
     }
   });
   conn?.addEventListener?.('change', renderNet);
 
-  /* ---------------- home: games & recent ---------------- */
+  /* ---------------- home: bookmarks & recent ---------------- */
   function embedTag(url) {
     const v = cachedVerdict(url);
     if (!v || v.frameable === null) return null;
-    return h('span', { class: `embed-tag ${v.frameable ? 'yes' : 'no'}`, 'data-embed': originOf(url), text: v.frameable ? 'Plays here' : 'Opens in tab' });
+    return h('span', { class: `embed-tag ${v.frameable ? 'yes' : 'no'}`, 'data-embed': originOf(url), text: v.frameable ? 'Opens here' : 'Opens in tab' });
   }
-  function updateEmbedTags() { renderGames(); }
+  function updateEmbedTags() { renderTiles(); }
 
   const prewarmed = new Set();
   function prewarm(url) {
@@ -753,20 +753,20 @@
     if (!cachedVerdict(url) && navigator.onLine) getVerdict(url).catch(() => {});
   }
 
-  function gameCard(g, { removable = null } = {}) {
+  function tileCard(g, { removable = null } = {}) {
     const host = new URL(g.url).host;
-    const art = h('div', { class: 'game-art' },
+    const art = h('div', { class: 'tile-art' },
       h('span', { class: 'era', text: g.era }),
       h('span', { class: 'monogram', text: g.mono }));
     art.style.setProperty('--art', g.art);
-    const card = h('article', { class: 'game-card' },
+    const card = h('article', { class: 'tile-card' },
       art,
-      h('div', { class: 'game-body' },
+      h('div', { class: 'tile-body' },
         h('h3', { text: g.name }),
         h('p', { text: g.blurb }),
-        h('div', { class: 'game-meta' }, host.replace(/^www\./, ''), embedTag(g.url)),
-        h('div', { class: 'game-actions' },
-          btn('Play', () => launch(g.url), 'primary', 'play'),
+        h('div', { class: 'tile-meta' }, host.replace(/^www\./, ''), embedTag(g.url)),
+        h('div', { class: 'tile-actions' },
+          btn('Open', () => launch(g.url), 'primary', 'open'),
           h('button', { type: 'button', class: 'btn ghost', title: 'Open in new tab', 'aria-label': `Open ${g.name} in new tab`, onclick: () => popout(g.url) }, icon('popout'), 'New tab'))),
       removable && h('button', { type: 'button', class: 'icon-btn sm remove', title: 'Remove site', 'aria-label': `Remove ${g.name}`, onclick: removable }, icon('trash')));
     card.addEventListener('pointerenter', () => prewarm(g.url), { once: true });
@@ -774,17 +774,17 @@
     return card;
   }
 
-  function renderGames() {
-    $('featuredGames').replaceChildren(...GAMES.filter((g) => g.featured).map((g) => gameCard(g)));
-    const more = GAMES.filter((g) => !g.featured).map((g) => gameCard(g));
+  function renderTiles() {
+    $('featuredTiles').replaceChildren(...BOOKMARKS.filter((g) => g.featured).map((g) => tileCard(g)));
+    const more = BOOKMARKS.filter((g) => !g.featured).map((g) => tileCard(g));
     for (const d of customDomains) {
-      more.push(gameCard({
+      more.push(tileCard({
         name: d.domain, era: 'Added', mono: d.domain[0].toUpperCase(),
         blurb: 'A site you added to the supported list.', url: `https://${d.domain}/`,
         art: 'linear-gradient(135deg,#2a2f3a,#161a22)',
       }, { removable: () => removeDomain(d.domain) }));
     }
-    $('moreGames').replaceChildren(...more);
+    $('moreTiles').replaceChildren(...more);
   }
 
   function renderRecent() {
@@ -817,14 +817,14 @@
     sa.value = String(settings.slowAfter);
     rs.checked = !!settings.resume;
     const save = () => store.set('settings', settings);
-    pw.addEventListener('change', () => { settings.preferWindow = pw.checked; save(); toast(pw.checked ? 'Games will open in a separate tab.' : 'Games will play inside the hub when the site allows it.', 'ok'); });
+    pw.addEventListener('change', () => { settings.preferWindow = pw.checked; save(); toast(pw.checked ? 'Sites will open in a separate tab.' : 'Sites will open inside StratFinder when they allow it.', 'ok'); });
     sa.addEventListener('change', () => { settings.slowAfter = Number(sa.value); save(); });
     rs.addEventListener('change', () => { settings.resume = rs.checked; save(); });
     $('btnClearChecks').addEventListener('click', async () => {
       checks = {};
       store.set('checks', checks);
       try { if (window.caches) await caches.delete('sh-checks'); } catch { /* ignore */ }
-      renderGames();
+      renderTiles();
       toast('Saved embed checks cleared.', 'ok');
     });
     $('addSiteForm').addEventListener('submit', (e) => {
@@ -897,7 +897,7 @@
   /* ---------------- service worker (offline shell) ---------------- */
   function registerSW() {
     const ver = $('appVersion');
-    const setVer = (s) => { ver.textContent = `Supremacy Hub ${VERSION} · ${s}`; };
+    const setVer = (s) => { ver.textContent = `StratFinder ${VERSION} · ${s}`; };
     if (!('serviceWorker' in navigator) || !(location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
       setVer('offline mode unavailable on this address');
       return;
@@ -927,7 +927,7 @@
   }
 
   /* ---------------- start ---------------- */
-  renderGames();
+  renderTiles();
   renderRecent();
   renderSites();
   renderSuggestions();

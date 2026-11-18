@@ -1,7 +1,7 @@
 {
-  "name": "supremacy-hub",
-  "version": "1.0.0",
-  "description": "Lightweight hub for launching and browsing Supremacy web games",
+  "name": "stratfinder",
+  "version": "1.1.0",
+  "description": "Lightweight personal start page and browser",
   "private": true,
   "main": "server.js",
   "scripts": {

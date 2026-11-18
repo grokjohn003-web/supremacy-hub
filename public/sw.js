@@ -1,6 +1,6 @@
-/* Supremacy Hub service worker: keeps the app usable on poor or no connection. */
+/* StratFinder service worker: keeps the app usable on poor or no connection. */
 'use strict';
-const VERSION = 'sh-v1.0.1';
+const VERSION = 'sf-v1.1.0';
 const SHELL_CACHE = `${VERSION}-shell`;
 const CHECK_CACHE = 'sh-checks';
 const SHELL = ['/', '/index.html', '/app.css', '/app.js', '/icon.svg', '/manifest.webmanifest'];
@@ -61,7 +61,7 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return; // never touch game traffic
+  if (url.origin !== self.location.origin) return; // never touch third-party traffic
   if (url.pathname === '/api/health') return;      // always live
   if (url.pathname === '/api/check') { event.respondWith(handleCheck(request)); return; }
   if (url.pathname.startsWith('/api/')) return;
